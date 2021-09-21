@@ -2,9 +2,9 @@
 
 This assignment will need to follow the [Makefile Tutorial](https://kodfabrik.com/journal/a-good-makefile-for-go)
 
-## Last name, first name (5 points)
+## Stringham, Don (5 points)
 
-`Github username`
+`donbstringham`
 
 ## Follow the tutorial (145 points)
 
