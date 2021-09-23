@@ -26,13 +26,11 @@ help:
 
 bld:				## Build the binaries
 bld: go-install go-build
-	@echo " > Building binary..."
 
 clean: 				## Clean project directories
 clean: go-clean
-	@echo " > Cleaning"
+	@echo " > Cleaning bin directory..."
 	-rm -r ./bin
-	-mkdir ./bin
 
 info:				## Present version, owner and packages
 info:
@@ -42,13 +40,15 @@ info:
 
 go-build:			## Build all binary OS versions
 go-build:
+	@echo " > Building all OS binaries..."
 	GOOS=linux GOARCH=amd64 $(CC) build -a -o $(GOBIN)/$(APP_NAME).linux-amd64 -ldflags='-s -w -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Version=$(VERSION) -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Buildtime=$(BUILD_TIME)' ./
 	GOOS=darwin GOARCH=amd64 $(CC) build -a -o $(GOBIN)/$(APP_NAME).darwin-amd64 -ldflags='-s -w -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Version=$(VERSION) -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Buildtime=$(BUILD_TIME)' ./
 	GOOS=windows GOARCH=amd64 $(CC) build -a -o $(GOBIN)/$(APP_NAME).windows-amd64.exe -ldflags='-s -w -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Version=$(VERSION) -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Buildtime=$(BUILD_TIME)' ./
 
 go-clean:			## Cleans the build cache
 go-clean:
-	@echo " > Cleaning build cache"
+	@echo " > Cleaning build cache..."
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) $(CC) clean
 
 go-get:				## Retrieve missing dependencies
 go-get:
@@ -57,5 +57,6 @@ go-get:
 
 go-install:			## Install all dependencies
 go-install:
+	@echo " > Installing dependencies..."
 	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) $(CC) install $(ALL_PACKAGES)
 
