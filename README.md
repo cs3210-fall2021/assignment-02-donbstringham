@@ -12,4 +12,4 @@ Follow the [Makefile Tutorial](https://kodfabrik.com/journal/a-good-makefile-for
 
 ## Challenge (50 points)
 
-The final `Makefile` should put the binary into the `bin/` folder.
+Create a simple hello `main.go` in the project root directory and have it work with this [makefile](https://raw.githubusercontent.com/cs3210-fall2021/assignment-02-donbstringham/master/Makefile).
