@@ -25,7 +25,6 @@ help:
 	@echo
 
 bld:				## Build the binaries
-bld:
 bld: go-install go-build
 
 clean: 				## Clean project directories
