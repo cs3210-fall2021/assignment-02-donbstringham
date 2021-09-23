@@ -11,7 +11,7 @@ GOFILES ?= $(wildcard *.go)
 ALL_PACKAGES ?= $(shell go list ./...)
 APP_NAME ?= $(shell basename "$(pwd)")
 BUILD_TIME ?= $(shell date +%FT%T%z)
-REPO_OWNER ?= $(shell git describe --tags 2>/dev/null)
+REPO_OWNER ?= $(shell cd .. && basename "$$(pwd)")
 VERSION ?= $(shell git describe --tags 2>/dev/null)
 
 # Targets
@@ -25,12 +25,12 @@ help:
 	@echo
 
 bld:				## Build the binaries
-bld: clean go-build
+bld: go-install go-build
 	@echo " > Building binary..."
-
 
 clean: 				## Clean project directories
 clean: go-clean
+	@echo " > Cleaning"
 	-rm -r ./bin
 	-mkdir ./bin
 
@@ -42,9 +42,9 @@ info:
 
 go-build:			## Build all binary OS versions
 go-build:
-	GOOS=linux GOARCH=amd64 $(CC) build -a -o ./bld/$(APP_NAME).linux-amd64 -ldflags='-s -w -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Version=$(VERSION) -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Buildtime=$(BUILD_TIME)' ./
-	GOOS=darwin GOARCH=amd64 $(CC) build -a -o ./bld/$(APP_NAME).darwin-amd64 -ldflags='-s -w -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Version=$(VERSION) -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Buildtime=$(BUILD_TIME)' ./
-	GOOS=windows GOARCH=amd64 $(CC) build -a -o ./bld/$(APP_NAME).windows-amd64.exe -ldflags='-s -w -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Version=$(VERSION) -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Buildtime=$(BUILD_TIME)' ./
+	GOOS=linux GOARCH=amd64 $(CC) build -a -o $(GOBIN)/$(APP_NAME).linux-amd64 -ldflags='-s -w -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Version=$(VERSION) -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Buildtime=$(BUILD_TIME)' ./
+	GOOS=darwin GOARCH=amd64 $(CC) build -a -o $(GOBIN)/$(APP_NAME).darwin-amd64 -ldflags='-s -w -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Version=$(VERSION) -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Buildtime=$(BUILD_TIME)' ./
+	GOOS=windows GOARCH=amd64 $(CC) build -a -o $(GOBIN)/$(APP_NAME).windows-amd64.exe -ldflags='-s -w -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Version=$(VERSION) -X github.com/$(REPO_OWNER)/$(APP_NAME)/ver.Buildtime=$(BUILD_TIME)' ./
 
 go-clean:			## Cleans the build cache
 go-clean:
@@ -53,8 +53,9 @@ go-clean:
 go-get:				## Retrieve missing dependencies
 go-get:
 	@echo " > Checking if there is any missing dependencies..."
-	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) go get $(get)
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) $(CC) get $(get)
 
-
-
+go-install:			## Install all dependencies
+go-install:
+	@GOPATH=$(GOPATH) GOBIN=$(GOBIN) $(CC) install $(ALL_PACKAGES)
 
